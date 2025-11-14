@@ -1,210 +1,222 @@
-# Configuración de A Huevo Es Verde
+# 🔐 Guía de Configuración de Variables de Entorno
 
-## Credenciales Configuradas
+Esta guía te ayudará a configurar de forma segura las claves de API necesarias para el funcionamiento de **A Huevo Es Verde**.
 
-### Firebase
-La aplicación está configurada con Firebase para:
-- **Hosting**: Alojamiento de la aplicación web
-- **Realtime Database**: Base de datos para pedidos
-- **Analytics**: Análisis de uso
-- **Functions**: Funciones en la nube (Stripe webhooks)
+## 📋 Variables Requeridas
 
-**Configuración:**
+### 1. Twilio (WhatsApp Notifications)
+Necesarias para enviar notificaciones de pedidos por WhatsApp:
+- `TWILIO_ACCOUNT_SID`: Tu Account SID de Twilio
+- `TWILIO_AUTH_TOKEN`: Tu Auth Token de Twilio
+
+**¿Dónde obtenerlas?**
+1. Ve a [Twilio Console](https://console.twilio.com/)
+2. Encuentra tu Account SID y Auth Token en el Dashboard
+3. Para WhatsApp, necesitas activar el [Twilio Sandbox for WhatsApp](https://www.twilio.com/docs/whatsapp/sandbox)
+
+### 2. Stripe (Procesamiento de Pagos)
+Necesaria para procesar pagos en línea:
+- `STRIPE_SECRET_KEY`: Tu Secret Key de Stripe
+
+**¿Dónde obtenerla?**
+1. Ve a [Stripe Dashboard](https://dashboard.stripe.com/)
+2. En Developers → API keys
+3. Usa las claves de **Test** para desarrollo
+4. Usa las claves de **Production** para producción
+
+⚠️ **IMPORTANTE**: Nunca compartas tu Secret Key públicamente.
+
+---
+
+## 🚀 Métodos de Configuración
+
+### Opción 1: Script Automático (Recomendado)
+
+Ejecuta el script de configuración:
+
+```bash
+bash scripts/setup-env.sh
+```
+
+Este script te guiará paso a paso para configurar todas las claves necesarias.
+
+### Opción 2: Configuración Manual con Firebase CLI
+
+#### Configurar variables:
+
+```bash
+# Twilio
+firebase functions:config:set twilio.account_sid="TU_ACCOUNT_SID_AQUI"
+firebase functions:config:set twilio.auth_token="TU_AUTH_TOKEN_AQUI"
+
+# Stripe
+firebase functions:config:set stripe.secret_key="TU_STRIPE_SECRET_KEY_AQUI"
+```
+
+#### Ver configuración actual:
+
+```bash
+firebase functions:config:get
+```
+
+#### Eliminar una configuración:
+
+```bash
+firebase functions:config:unset twilio.account_sid
+```
+
+### Opción 3: Variables de Entorno Locales (Desarrollo)
+
+Para desarrollo local con el emulador de Firebase:
+
+1. Copia el archivo de ejemplo:
+```bash
+cp .env.example .env
+```
+
+2. Edita `.env` y agrega tus claves reales:
+```env
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_AUTH_TOKEN=tu_auth_token_secreto
+STRIPE_SECRET_KEY=sk_test_xxxxxxxxxxxxxxxxxxxxxx
+```
+
+3. El archivo `.env` está en `.gitignore` para que no se suba a Git.
+
+---
+
+## 🔄 Aplicar los Cambios
+
+### En Desarrollo (Emulador)
+
+Después de configurar las variables, reinicia el emulador:
+
+```bash
+cd functions
+npm run serve
+```
+
+### En Producción
+
+Despliega las funciones actualizadas:
+
+```bash
+firebase deploy --only functions
+```
+
+---
+
+## ✅ Verificar la Configuración
+
+### Verificar Firebase Functions Config:
+
+```bash
+firebase functions:config:get
+```
+
+Deberías ver algo como:
+
+```json
+{
+  "twilio": {
+    "account_sid": "ACxxxxxxxxxxxxxxxxxxxxx",
+    "auth_token": "**********************"
+  },
+  "stripe": {
+    "secret_key": "sk_**********************"
+  }
+}
+```
+
+### Verificar en el código:
+
+Las funciones en `functions/index.js` obtienen las claves de esta manera:
+
 ```javascript
-const firebaseConfig = {
-  apiKey: "AIzaSyA_Gno-Pc8Ve09Ue6_hgeXTCAFVrc2u3yU",
-  authDomain: "ahuevoesverde.firebaseapp.com",
-  databaseURL: "https://ahuevoesverde-default-rtdb.firebaseio.com",
-  projectId: "ahuevoesverde",
-  storageBucket: "ahuevoesverde.firebasestorage.app",
-  messagingSenderId: "625137246289",
-  appId: "1:625137246289:web:260cc0eb9e1377c6d55870",
-  measurementId: "G-0ZXZKMH43V"
-};
+// Primero intenta con Firebase Config, luego con variables de entorno
+const twilioAccountSid = functions.config().twilio?.account_sid || process.env.TWILIO_ACCOUNT_SID;
+const twilioAuthToken = functions.config().twilio?.auth_token || process.env.TWILIO_AUTH_TOKEN;
+const stripeKey = functions.config().stripe?.secret_key || process.env.STRIPE_SECRET_KEY;
 ```
 
-### Stripe (Modo de Prueba)
-Configurado para pagos en línea:
+---
 
-**Clave Publicable (Client-side):**
-```
-pk_test_your_stripe_publishable_key_here
-```
+## 🛡️ Seguridad
 
-**Clave Secreta (Server-side):**
-```
-sk_test_your_stripe_secret_key_here
-```
+### ✅ Buenas Prácticas:
 
-**Webhook URL:**
-```
-https://us-central1-ahuevoesverde.cloudfunctions.net/ext-firestore-stripe-payments-handleWebhookEvents
-```
+- ✅ Usa claves de **Test** en desarrollo
+- ✅ Usa claves de **Production** solo en producción
+- ✅ Nunca compartas tus claves en repositorios públicos
+- ✅ Rota tus claves periódicamente
+- ✅ Usa Firebase Functions Config para producción
+- ✅ Usa `.env` local solo para desarrollo
 
-**Tarjetas de Prueba:**
-- **Éxito:** 4242 4242 4242 4242
-- **Rechazo:** 4000 0000 0000 0002
-- Cualquier CVC de 3 dígitos
-- Cualquier fecha futura
+### ❌ Nunca hagas:
 
-### Twilio
-Configurado para SMS (opcional):
+- ❌ NO hardcodees claves en el código
+- ❌ NO subas archivos `.env` a Git
+- ❌ NO compartas claves en Slack, email, etc.
+- ❌ NO uses claves de producción en desarrollo
 
-**Account SID:**
-```
-your_twilio_account_sid_here
-```
+---
 
-**Número Toll-Free:**
-```
-+1 888 430 6773
-```
+## 🔍 Troubleshooting
 
-**Bundle SID:**
-```
-BU5aec6263c7ea32d26d913c124e844964
-```
+### Error: "Firebase CLI not found"
 
-### WhatsApp
-**Número de Contacto:**
-```
-528115676691
-```
-
-## Estructura de Imágenes
-
-Las imágenes de platillos y bebidas están ubicadas en:
-```
-public/images/
-├── ahuevohomelet.png
-├── ahuevosonora.png
-├── ahuevomexicano.png
-├── ahuevoveracruz.png
-├── ahuevochilango.png
-├── jugodenaranja.png
-├── jugodepina.png
-├── jugodemelon.png
-├── jugoverde.png
-└── cafedeolla.png
-```
-
-## Despliegue
-
-### 1. Instalar Firebase CLI
+Instala Firebase CLI:
 ```bash
 npm install -g firebase-tools
 ```
 
-### 2. Login a Firebase
+### Error: "Not authenticated"
+
+Inicia sesión en Firebase:
 ```bash
 firebase login
 ```
 
-### 3. Inicializar el proyecto (si no está inicializado)
-```bash
-firebase init
-```
-Selecciona:
-- Hosting
-- Realtime Database
-- Functions
+### Error: "Unable to send WhatsApp message"
 
-### 4. Desplegar
-```bash
-# Desplegar todo
-firebase deploy
+1. Verifica que tus credenciales de Twilio sean correctas
+2. Asegúrate de haber activado WhatsApp en Twilio
+3. Verifica que el número esté en el formato correcto: `+526311081965`
+4. Para desarrollo, usa el [Twilio Sandbox](https://www.twilio.com/docs/whatsapp/sandbox)
 
-# O desplegar componentes individuales
-firebase deploy --only hosting
-firebase deploy --only database
-firebase deploy --only functions
-```
+### Error: "Stripe payment failed"
 
-## Configurar Stripe Webhook
-
-1. Ve a tu Dashboard de Stripe: https://dashboard.stripe.com/test/webhooks
-2. Clic en "Add endpoint"
-3. URL del endpoint:
-   ```
-   https://us-central1-ahuevoesverde.cloudfunctions.net/ext-firestore-stripe-payments-handleWebhookEvents
-   ```
-4. Selecciona los eventos:
-   - `payment_intent.succeeded`
-   - `payment_intent.payment_failed`
-   - `checkout.session.completed`
-
-## URLs de la Aplicación
-
-**Sitio Principal:**
-```
-https://ahuevoesverde.web.app
-https://ahuevoesverde.firebaseapp.com
-```
-
-**Panel de Cocina:**
-```
-https://ahuevoesverde.web.app/admin.html
-```
-
-## Funcionalidades Implementadas
-
-✅ **Menú Digital**
-- Visualización de platillos y bebidas con imágenes
-- Filtrado por categoría
-- Detalles de cada producto
-
-✅ **Sistema de Pedidos**
-- Carrito de compras
-- Persistencia en localStorage
-- Gestión de cantidades
-
-✅ **Métodos de Pedido**
-- Pago en línea con Stripe
-- Pedido por WhatsApp
-
-✅ **Panel de Cocina**
-- Vista en tiempo real de pedidos
-- Actualización de estado de pedidos
-- Notificaciones de audio y navegador
-- Estadísticas del día
-
-✅ **Integración con Firebase**
-- Base de datos en tiempo real
-- Hosting configurado
-- Analytics activo
-
-## Próximos Pasos
-
-### Para Producción:
-
-1. **Cambiar a claves de producción de Stripe:**
-   - Reemplazar `pk_test_...` con `pk_live_...`
-   - Reemplazar `sk_test_...` con `sk_live_...`
-
-2. **Configurar autenticación** (opcional):
-   - Implementar Firebase Auth
-   - Proteger el panel de cocina
-
-3. **Agregar SMS con Twilio** (opcional):
-   - Crear función de Firebase para enviar SMS
-   - Notificar a clientes del estado del pedido
-
-4. **Optimizar imágenes:**
-   - Comprimir imágenes para carga más rápida
-   - Implementar lazy loading
-
-5. **Testing:**
-   - Probar flujo completo de pedidos
-   - Verificar webhooks de Stripe
-   - Probar en diferentes dispositivos
-
-## Soporte
-
-Para preguntas o problemas:
-- Email: contacto@ahuevoesverde.com
-- WhatsApp: +52 631 123 4567
+1. Verifica que tu Secret Key sea correcta
+2. En desarrollo, usa claves de Test (`sk_test_...`)
+3. Verifica que tu cuenta de Stripe esté activa
 
 ---
 
-**Última actualización:** 2025-01-04
-**Versión:** 1.0.0
+## 📚 Recursos Adicionales
+
+- [Firebase Functions Configuration](https://firebase.google.com/docs/functions/config-env)
+- [Twilio WhatsApp API](https://www.twilio.com/docs/whatsapp)
+- [Stripe API Documentation](https://stripe.com/docs/api)
+- [Firebase Environment Config](https://firebase.google.com/docs/functions/config-env)
+
+---
+
+## 🆘 Soporte
+
+Si tienes problemas con la configuración:
+
+1. Revisa los logs de Firebase Functions:
+   ```bash
+   firebase functions:log
+   ```
+
+2. Verifica la configuración:
+   ```bash
+   firebase functions:config:get
+   ```
+
+3. Prueba las funciones localmente:
+   ```bash
+   cd functions
+   npm run serve
+   ```
