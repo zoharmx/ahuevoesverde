@@ -1,62 +1,63 @@
-# 🔧 Comandos para Ejecutar en tu Terminal (PowerShell)
+# 🔧 Guía de Despliegue - A Huevo Es Verde
 
-## Configurar Firebase Functions Config (Producción)
+## ✅ Configuración Completada
 
-Ejecuta estos comandos en tu PowerShell desde la carpeta del proyecto:
+Las credenciales de Twilio ya están configuradas en `functions/.env`:
+- ✅ TWILIO_ACCOUNT_SID
+- ✅ TWILIO_AUTH_TOKEN
 
-```powershell
-# Configurar Twilio (usa tus credenciales reales de Twilio Console)
-firebase functions:config:set twilio.account_sid="TU_ACCOUNT_SID_AQUI"
-firebase functions:config:set twilio.auth_token="TU_AUTH_TOKEN_AQUI"
+## 🚀 Desplegar a Producción
 
-# Verificar que se guardó correctamente
-firebase functions:config:get
-```
-
-Deberías ver algo como:
-```json
-{
-  "twilio": {
-    "account_sid": "ACxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    "auth_token": "********************************"
-  }
-}
-```
-
-## Desplegar a Producción
-
-Una vez configurado, despliega las funciones:
+Ejecuta estos comandos en tu PowerShell:
 
 ```powershell
+# 1. Instalar dependencias (si no lo has hecho)
+cd functions
+npm install
+
+# 2. Volver a la raíz del proyecto
+cd ..
+
+# 3. Desplegar las funciones
 firebase deploy --only functions
 ```
 
-## Para Desarrollo Local
+---
 
-Ya creé el archivo `.env` con tus credenciales de Twilio.
+## 🧪 Para Desarrollo Local
 
-Para usar el emulador local:
+Si quieres probar las funciones localmente antes de desplegar:
 
 ```powershell
+# Desde la carpeta functions
 cd functions
 npm run serve
 ```
 
-El emulador usará automáticamente las variables del archivo `.env`.
+El emulador usará automáticamente las variables del archivo `functions/.env`.
 
 ---
 
-## Configurar Stripe (Más Adelante)
+## 🔐 Configurar Stripe (Más Adelante)
 
-Cuando estés listo para configurar Stripe con la URL:
+Cuando tengas tu Stripe Secret Key, edita el archivo `functions/.env`:
 
-```powershell
-firebase functions:config:set stripe.secret_key="TU_STRIPE_SECRET_KEY_AQUI"
+```env
+STRIPE_SECRET_KEY=sk_test_tu_clave_aqui
+```
+
+O para producción:
+
+```env
+STRIPE_SECRET_KEY=sk_live_tu_clave_aqui
 ```
 
 ---
 
-## ⚠️ IMPORTANTE
+## ⚠️ Nota Importante sobre Firebase Config
 
-El archivo `.env` está en `.gitignore` y NO se subirá a GitHub (es seguro).
-Las configuraciones de Firebase Functions config están en la nube de forma segura.
+Firebase Functions Config (`functions.config()`) está obsoleto y dejará de funcionar en marzo 2026.
+
+**Ya migré el código a usar dotenv (`.env`)**, que es el método recomendado por Firebase.
+
+Los archivos `.env` están en `.gitignore` y NO se subirán a GitHub (es seguro).
