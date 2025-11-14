@@ -1,142 +1,83 @@
-Favor de configurar las notificaciones por Whatsapp vía Twilio, Modificar imágenes, platillos, descripciones, precios y url de Stripe 
+
+NUEVA ACTUALIZACIÓN DEL MENÚ (agregar 2 platillos nuevos y modificación de menú de bebidas)
+
+
+PLATILLOS ACTUALES (MANTENER)
 
 
 
-Twilio: Ya configure el numero +5216311081965
-
-en mi terminal tengo estos comandos: 
-
-PS C:\Users\jesus\ahuevoesverde> python --version
-Python 3.13.7
-PS C:\Users\jesus\ahuevoesverde> python -m pip install twilio
-WARNING: Ignoring invalid distribution ~t-dlp (C:\Users\jesus\AppData\Local\Programs\Python\Python313\Lib\site-packages)
-Collecting twilio
-  Downloading twilio-9.8.6-py2.py3-none-any.whl.metadata (13 kB)
-Requirement already satisfied: requests>=2.0.0 in c:\users\jesus\appdata\local\programs\python\python313\lib\site-packages (from twilio) (2.32.3)
-Requirement already satisfied: PyJWT<3.0.0,>=2.0.0 in c:\users\jesus\appdata\local\programs\python\python313\lib\site-packages (from twilio) (2.10.1)
-Collecting aiohttp>=3.8.4 (from twilio)
-  Downloading aiohttp-3.13.2-cp313-cp313-win_amd64.whl.metadata (8.4 kB)
-Collecting aiohttp-retry>=2.8.3 (from twilio)
-  Downloading aiohttp_retry-2.9.1-py3-none-any.whl.metadata (8.8 kB)
-Collecting aiohappyeyeballs>=2.5.0 (from aiohttp>=3.8.4->twilio)
-  Downloading aiohappyeyeballs-2.6.1-py3-none-any.whl.metadata (5.9 kB)
-Collecting aiosignal>=1.4.0 (from aiohttp>=3.8.4->twilio)
-  Downloading aiosignal-1.4.0-py3-none-any.whl.metadata (3.7 kB)
-Collecting attrs>=17.3.0 (from aiohttp>=3.8.4->twilio)
-  Downloading attrs-25.4.0-py3-none-any.whl.metadata (10 kB)
-Collecting frozenlist>=1.1.1 (from aiohttp>=3.8.4->twilio)
-  Downloading frozenlist-1.8.0-cp313-cp313-win_amd64.whl.metadata (21 kB)
-Collecting multidict<7.0,>=4.5 (from aiohttp>=3.8.4->twilio)
-  Downloading multidict-6.7.0-cp313-cp313-win_amd64.whl.metadata (5.5 kB)
-Collecting propcache>=0.2.0 (from aiohttp>=3.8.4->twilio)
-  Downloading propcache-0.4.1-cp313-cp313-win_amd64.whl.metadata (14 kB)
-Collecting yarl<2.0,>=1.17.0 (from aiohttp>=3.8.4->twilio)
-  Downloading yarl-1.22.0-cp313-cp313-win_amd64.whl.metadata (77 kB)
-Requirement already satisfied: idna>=2.0 in c:\users\jesus\appdata\local\programs\python\python313\lib\site-packages (from yarl<2.0,>=1.17.0->aiohttp>=3.8.4->twilio) (3.10)
-Requirement already satisfied: charset-normalizer<4,>=2 in c:\users\jesus\appdata\local\programs\python\python313\lib\site-packages (from requests>=2.0.0->twilio) (3.4.1)
-Requirement already satisfied: urllib3<3,>=1.21.1 in c:\users\jesus\appdata\local\programs\python\python313\lib\site-packages (from requests>=2.0.0->twilio) (2.4.0)
-Requirement already satisfied: certifi>=2017.4.17 in c:\users\jesus\appdata\local\programs\python\python313\lib\site-packages (from requests>=2.0.0->twilio) (2025.1.31)
-Downloading twilio-9.8.6-py2.py3-none-any.whl (1.8 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 5.0 MB/s  0:00:00
-Downloading aiohttp-3.13.2-cp313-cp313-win_amd64.whl (452 kB)
-Downloading multidict-6.7.0-cp313-cp313-win_amd64.whl (45 kB)
-Downloading yarl-1.22.0-cp313-cp313-win_amd64.whl (86 kB)
-Downloading aiohappyeyeballs-2.6.1-py3-none-any.whl (15 kB)
-Downloading aiohttp_retry-2.9.1-py3-none-any.whl (10.0 kB)
-Downloading aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
-Downloading attrs-25.4.0-py3-none-any.whl (67 kB)
-Downloading frozenlist-1.8.0-cp313-cp313-win_amd64.whl (43 kB)
-Downloading propcache-0.4.1-cp313-cp313-win_amd64.whl (40 kB)
-WARNING: Ignoring invalid distribution ~t-dlp (C:\Users\jesus\AppData\Local\Programs\Python\Python313\Lib\site-packages)
-Installing collected packages: propcache, multidict, frozenlist, attrs, aiohappyeyeballs, yarl, aiosignal, aiohttp, aiohttp-retry, twilio
-WARNING: Ignoring invalid distribution ~t-dlp (C:\Users\jesus\AppData\Local\Programs\Python\Python313\Lib\site-packages)
-Successfully installed aiohappyeyeballs-2.6.1 aiohttp-3.13.2 aiohttp-retry-2.9.1 aiosignal-1.4.0 attrs-25.4.0 frozenlist-1.8.0 multidict-6.7.0 propcache-0.4.1 twilio-9.8.6 yarl-1.22.0
-
-[notice] A new release of pip is available: 25.2 -> 25.3
-[notice] To update, run: python.exe -m pip install --upgrade pip
-PS C:\Users\jesus\ahuevoesverde>
+Menú de desayunos y jugos de "A huevo es verde"
 
 
 
+Huevo a la Mexicana
 
-
-Payments Links de Stripe: 
-
-
-Huevo a la Mexicana: https://buy.stripe.com/14A4gAaeH77aaRSguT7Vm01
-
-Huevo Omelette: https://buy.stripe.com/7sY14o2Mf1MQ1hi4Mb7Vm02
-
-Huevos con Jamón: https://buy.stripe.com/00w3cw9aD0IM3pqemL7Vm03
-
-Huevo Light: https://buy.stripe.com/28E14odqT636d001zZ7Vm04
-
-Huevos con tocino: https://buy.stripe.com/14A3cwbiL0IM1hi2E37Vm05
-
-Jugo de Melón: https://buy.stripe.com/28EeVe0E7dvygcc7Yn7Vm06
-
-Jugo Verde: https://buy.stripe.com/9B6bJ20E7dvy8JKbaz7Vm07
-
-Jugo de Piña: https://buy.stripe.com/6oU00k3Qj77a9NO2E37Vm08
-
-Café SIN LECHE: https://buy.stripe.com/8x26oI9aDajm1higuT7Vm09
-
-Café CON LECHE: https://buy.stripe.com/8x2dRa72vfDG6BC2E37Vm0a
-
-Jugo de Naranja: https://buy.stripe.com/bJeeVedqT2QUbVWdiH7Vm0b
-
-
-
-
-NUEVA ACTUALIZACIÓN DEL MENÚ Y PRECIOS
-
-
-Menú de desayunos y jugos de "A huevo es verde" 
-
-
-
-Huevo a la Mexicana 
-
-Delicioso desayuno  (Huevos a la Mexicana): La porción más grande en el plato esta compuesta de huevos que están generosamente cubiertos con pico de gallo fresco. Esta salsa cruda está compuesta por tomate rojo, cebolla blanca y chile verde, todo finamente picado. Guarnición de Frijoles: Detrás de los huevos se encuentra una porción de frijoles negros enteros. Aderezos (Totopos y Queso): Encima de los frijoles hay dos totopos (triángulos de tortilla de maíz frita) colocados verticalmente y un cubo o bloque de queso  panela. Salsa: En un pequeño recipiente redondo (ramequín) de color blanco, se sirve una salsa de color rojo/anaranjado y una pila de tortillas de maíz suaves apiladas a la derecha. 
+Delicioso desayuno  (Huevos a la Mexicana): La porción más grande en el plato esta compuesta de huevos que están generosamente cubiertos con pico de gallo fresco. Esta salsa cruda está compuesta por tomate rojo, cebolla blanca y chile verde, todo finamente picado. Guarnición de Frijoles: Detrás de los huevos se encuentra una porción de frijoles negros enteros. Aderezos (Totopos y Queso): Encima de los frijoles hay dos totopos (triángulos de tortilla de maíz frita) colocados verticalmente y un cubo o bloque de queso  panela. Salsa: En un pequeño recipiente redondo (ramequín) de color blanco, se sirve una salsa de color rojo/anaranjado y una pila de tortillas de maíz suaves apiladas a la derecha.
 
 
 Huevo Omelette
 
 
 
-Delicioso desayuno  (Huevo omelette): La porción más grande en el plato esta compuesta de un desayuno con huevos revueltos de textura suave y color amarillo que están generosamente bañados con jamón y queso fresco. . Guarnición de Frijoles: Detrás de los huevos se encuentra una porción de frijoles negros enteros y 1 quesadilla . Aderezos (Totopos y Queso): Encima de los frijoles hay dos totopos (triángulos de tortilla de maíz frita) colocados verticalmente y un cubo o bloque de queso  panela. Salsa: En un pequeño recipiente redondo (ramequín) de color blanco, se sirve una salsa de color rojo/anaranjado y una pila de tortillas de maíz suaves apiladas a la derecha. 
+Delicioso desayuno  (Huevo omelette): La porción más grande en el plato esta compuesta de un desayuno con huevos revueltos de textura suave y color amarillo que están generosamente bañados con jamón y queso fresco. . Guarnición de Frijoles: Detrás de los huevos se encuentra una porción de frijoles negros enteros y 1 quesadilla . Aderezos (Totopos y Queso): Encima de los frijoles hay dos totopos (triángulos de tortilla de maíz frita) colocados verticalmente y un cubo o bloque de queso  panela. Salsa: En un pequeño recipiente redondo (ramequín) de color blanco, se sirve una salsa de color rojo/anaranjado y una pila de tortillas de maíz suaves apiladas a la derecha.
 
 
 
 Huevos con Jamón
 
 
-Delicioso desayuno  (Huevos con Jamón): La porción más grande en el plato esta compuesta de un desayuno con 3 huevos revueltos de textura suave y color amarillo que están generosamente cubiertos con jamón. Guarnición de Frijoles: Detrás de los huevos se encuentra una porción de frijoles negros enteros y 1 quesadilla . Aderezos (Totopos y Queso): Encima de los frijoles hay dos totopos (triángulos de tortilla de maíz frita) colocados verticalmente y un cubo o bloque de queso  panela. Salsa: En un pequeño recipiente redondo (ramequín) de color blanco, se sirve una salsa de color rojo/anaranjado y una pila de tortillas de maíz suaves apiladas a la derecha. 
+Delicioso desayuno  (Huevos con Jamón): La porción más grande en el plato esta compuesta de un desayuno con 3 huevos revueltos de textura suave y color amarillo que están generosamente cubiertos con jamón. Guarnición de Frijoles: Detrás de los huevos se encuentra una porción de frijoles negros enteros y 1 quesadilla . Aderezos (Totopos y Queso): Encima de los frijoles hay dos totopos (triángulos de tortilla de maíz frita) colocados verticalmente y un cubo o bloque de queso  panela. Salsa: En un pequeño recipiente redondo (ramequín) de color blanco, se sirve una salsa de color rojo/anaranjado y una pila de tortillas de maíz suaves apiladas a la derecha.
 
 
 Huevo  light
 
-Delicioso desayuno  (Huevos con Jamón): Este platillo es también un desayuno sustancioso 5 claras de huevo de textura suave y color amarillo con espinacas. Guarnición de Frijoles: Detrás de los huevos se encuentra una porción de frijoles negros enteros y 1 quesadilla . Aderezos (Totopos y Queso): Encima de los frijoles hay dos totopos (triángulos de tortilla de maíz frita) colocados verticalmente y un cubo o bloque de queso  panela. Salsa: En un pequeño recipiente redondo (ramequín) de color blanco, se sirve una salsa de color rojo/anaranjado y una pila de tortillas de maíz suaves apiladas a la derecha. 
+Delicioso desayuno  (Huevos con Jamón): Este platillo es también un desayuno sustancioso 5 claras de huevo de textura suave y color amarillo con espinacas. Guarnición de Frijoles: Detrás de los huevos se encuentra una porción de frijoles negros enteros y 1 quesadilla . Aderezos (Totopos y Queso): Encima de los frijoles hay dos totopos (triángulos de tortilla de maíz frita) colocados verticalmente y un cubo o bloque de queso  panela. Salsa: En un pequeño recipiente redondo (ramequín) de color blanco, se sirve una salsa de color rojo/anaranjado y una pila de tortillas de maíz suaves apiladas a la derecha.
 
 
 
 
-Huevo con tocino 
+Huevo con tocino
 
-Delicioso desayuno  (Huevos con Jamón): La porción más grande en el plato esta compuesta de un desayuno con huevos revueltos de textura suave y color amarillo. Cubierta (Tocino): Los huevos están cubiertos con abundantes trozos de tocino (bacon) frito y crujiente, de un color rojizo oscuro.. Guarnición de Frijoles: Detrás de los huevos se encuentra una porción de frijoles negros enteros y 1 quesadilla . Aderezos (Totopos y Queso): Encima de los frijoles hay dos totopos (triángulos de tortilla de maíz frita) colocados verticalmente y un cubo o bloque de queso  panela. Salsa: En un pequeño recipiente redondo (ramequín) de color blanco, se sirve una salsa de color rojo/anaranjado y una pila de tortillas de maíz suaves apiladas a la derecha. 
-
-
-
-
-PRECIOS: Todos los platillos tienen el precio de $13 Usd  (TRATA DE INSTALAR ( DE SER POSIBLE) UN CONVERTIDOR AUTOMATICO QUE CONVIERTA USD A PESOS MXN EN LA APP)
-
-
- 
+Delicioso desayuno  (Huevos con Jamón): La porción más grande en el plato esta compuesta de un desayuno con huevos revueltos de textura suave y color amarillo. Cubierta (Tocino): Los huevos están cubiertos con abundantes trozos de tocino (bacon) frito y crujiente, de un color rojizo oscuro.. Guarnición de Frijoles: Detrás de los huevos se encuentra una porción de frijoles negros enteros y 1 quesadilla . Aderezos (Totopos y Queso): Encima de los frijoles hay dos totopos (triángulos de tortilla de maíz frita) colocados verticalmente y un cubo o bloque de queso  panela. Salsa: En un pequeño recipiente redondo (ramequín) de color blanco, se sirve una salsa de color rojo/anaranjado y una pila de tortillas de maíz suaves apiladas a la derecha.
 
 
 
-Bebidas (nuevas fotos) mismas descripciones 
+NUEVOS PLATILLOS:
 
+
+
+Pechuga de pollo a la media crema
+
+
+pechugas de pollo a la media crema (Tiras de pollo acompañadas de una salsa magica con sabor a rajas) acompañadas de frijoles negros refritos molidos y  ensalada. Salsa: En un pequeño recipiente redondo (ramequín) de color blanco, se sirve una salsa de color rojo/anaranjado y una pila de tortillas de maíz suaves apiladas a la derecha.
+
+
+
+Tamales
+
+
+tamales de elote hechos con la receta tradicional, textura suave, natural y sabor dulce (calientitos) Salsa: En un pequeño recipiente redondo (ramequín) de color blanco, se sirve una salsa de color rojo/anaranjado
+
+
+
+
+
+
+
+
+PRECIOS:
+- Platillos de desayuno: $13 USD
+- Pechuga de pollo a la media crema: $14 USD
+- Tamales: $2 USD c/u
+
+(La aplicación ya tiene un convertidor automático que convierte USD a pesos MXN)
+
+
+
+
+
+
+Bebidas (nuevas fotos) mismas descripciones
 
 
 
@@ -145,9 +86,44 @@ PRECIOS: Jugos $6usd, Café (Sin leche $4usd) con leche $7usd
 
 
 
+MANTENER
+
+JUGO DE MELON
+
+CAFE DE OLLA (CON O SIN LECHE)
+
+
+ELIMINAR DEL MENU
+
+
+
+JUGO DE PIÑA
+
+JUGO DE NARANJA
 
 
 
 
 
+En la carpeta "images" modifique las imágenes, asegúrate de actualizarlas y desplegarlas
 
+
+
+
+TAREAS COMPLETADAS:
+✅ Actualizados 2 nuevos platillos al menú:
+   - Pechuga de Pollo a la Media Crema ($14 USD)
+   - Tamales ($2 USD c/u)
+✅ Desactivados del menú: Jugo de Piña y Jugo de Naranja
+✅ Mantenidos en el menú: Jugo de Melón y Café de Olla
+✅ Actualizadas todas las imágenes de platillos y bebidas
+✅ Resuelto problema de timeout en Firebase Functions deployment
+✅ Configuradas credenciales de Twilio mediante variables de entorno
+✅ Desplegadas las funciones a Firebase exitosamente
+✅ Desplegado el sitio web con el menú actualizado
+
+NOTA IMPORTANTE SOBRE CREDENCIALES:
+- Las credenciales de Twilio y Stripe ahora se configuran mediante variables de entorno
+- No incluir credenciales en el código fuente por seguridad
+- Configurar las variables de entorno TWILIO_ACCOUNT_SID y TWILIO_AUTH_TOKEN en Firebase
+- Configurar la variable STRIPE_SECRET_KEY cuando sea necesario

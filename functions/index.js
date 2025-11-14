@@ -8,8 +8,13 @@ let twilioClient = null;
 function getTwilioClient() {
     if (!twilioClient) {
         const twilio = require('twilio'); // Load twilio only when needed
-        const twilioAccountSid = functions.config().twilio?.account_sid || process.env.TWILIO_ACCOUNT_SID;
-        const twilioAuthToken = functions.config().twilio?.auth_token || process.env.TWILIO_AUTH_TOKEN;
+        const twilioAccountSid = process.env.TWILIO_ACCOUNT_SID;
+        const twilioAuthToken = process.env.TWILIO_AUTH_TOKEN;
+
+        if (!twilioAccountSid || !twilioAuthToken) {
+            console.warn('Twilio credentials not configured. Set TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN environment variables.');
+        }
+
         twilioClient = twilio(twilioAccountSid, twilioAuthToken);
     }
     return twilioClient;
@@ -20,10 +25,13 @@ let stripeClient = null;
 function getStripeClient() {
     if (!stripeClient) {
         const stripe = require('stripe');
-        stripeClient = stripe(
-            functions.config().stripe?.secret_key ||
-            process.env.STRIPE_SECRET_KEY
-        );
+        const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+
+        if (!stripeSecretKey) {
+            console.warn('Stripe secret key not configured. Set STRIPE_SECRET_KEY environment variable.');
+        }
+
+        stripeClient = stripe(stripeSecretKey);
     }
     return stripeClient;
 }

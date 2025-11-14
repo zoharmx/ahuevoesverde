@@ -29,7 +29,8 @@
       "Bash(findstr:*)",
       "Bash(node:*)",
       "Bash(curl:*)",
-      "Bash(cmd /c copy \"images\\jugodepiña.png\" \"public\\images\\jugodepina.png\")"
+      "Bash(cmd /c copy \"images\\jugodepiña.png\" \"public\\images\\jugodepina.png\")",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []
