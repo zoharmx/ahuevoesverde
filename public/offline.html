@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sin Conexión - A Huevo Es Verde</title>
+    <link rel="icon" href="/images/6f694ae6-8898-4889-a769-82766dbf3725.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #E3F2FD 0%, #FFF9C4 50%, #E3F2FD 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .logo {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: 1.25rem;
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .offline-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn-retry {
+            background: linear-gradient(135deg, #FDB813 0%, #FF9800 100%);
+            color: white;
+            font-weight: 600;
+            padding: 1rem 2.5rem;
+            border-radius: 2rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1.125rem;
+            box-shadow: 0 4px 15px rgba(253, 184, 19, 0.4);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-retry:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(253, 184, 19, 0.6);
+        }
+
+        .features {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-top: 3rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .features h2 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-list {
+            text-align: left;
+            display: inline-block;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #7CB342 0%, #558B2F 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .status {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 1rem;
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .connection-status {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #E53935;
+            margin-right: 0.5rem;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        .connection-status.online {
+            background: #7CB342;
+            animation: none;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="/images/6f694ae6-8898-4889-a769-82766dbf3725.png" alt="A Huevo Es Verde" class="logo">
+
+        <div class="offline-icon">📡</div>
+
+        <h1>Sin Conexión</h1>
+
+        <p>
+            No pudimos conectarnos a internet. Pero no te preocupes,
+            puedes seguir navegando el menú guardado.
+        </p>
+
+        <button onclick="location.reload()" class="btn-retry">
+            🔄 Reintentar Conexión
+        </button>
+
+        <div class="features">
+            <h2>Mientras tanto, puedes:</h2>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-icon">📋</div>
+                    <span>Ver el menú guardado</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🛒</div>
+                    <span>Preparar tu pedido</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">💾</div>
+                    <span>Guardar pedidos para después</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="status">
+            <span class="connection-status" id="status-indicator"></span>
+            <span id="status-text">Sin conexión</span>
+        </div>
+    </div>
+
+    <script>
+        // Check connection status
+        function updateConnectionStatus() {
+            const indicator = document.getElementById('status-indicator');
+            const text = document.getElementById('status-text');
+
+            if (navigator.onLine) {
+                indicator.classList.add('online');
+                text.textContent = 'Conectado - Recargando...';
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                indicator.classList.remove('online');
+                text.textContent = 'Sin conexión';
+            }
+        }
+
+        // Listen for connection changes
+        window.addEventListener('online', updateConnectionStatus);
+        window.addEventListener('offline', updateConnectionStatus);
+
+        // Check on load
+        updateConnectionStatus();
+
+        // Periodic check
+        setInterval(() => {
+            if (navigator.onLine) {
+                fetch('/manifest.json', { method: 'HEAD' })
+                    .then(() => location.reload())
+                    .catch(() => {});
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

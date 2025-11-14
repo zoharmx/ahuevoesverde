@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A huevo es verde - Almuerzos y Jugos a Domicilio en Nogales</title>
+    <meta name="description" content="Los mejores almuerzos y jugos frescos en Nogales, Sonora. Pide en línea y recibe tu pedido en la Aduana mientras esperas. ¡Rápido, delicioso y a huevo!">
+    
+    <meta property="og:title" content="A huevo es verde - Almuerzos y Jugos">
+    <meta property="og:description" content="Pide en línea los mejores almuerzos y jugos frescos en Nogales, Sonora. Entregamos directo en la Aduana.">
+    <meta property="og:image" content="https://i.imgur.com/eB4Y1b6.jpeg">
+    <meta property="og:url" content="https://ahuevoesverde.com">
+    <meta property="og:type" content="website">
+    
+    <link rel="icon" href="https://i.imgur.com/eB4Y1b6.jpeg" type="image/png">
+    <link rel="apple-touch-icon" href="https://i.imgur.com/eB4Y1b6.jpeg">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-blue': '#00A7E1',
+                        'brand-yellow': '#FFC700',
+                        'brand-green': '#22C55E',
+                        'brand-light-blue': '#EFF9FF',
+                        'brand-dark': '#333333',
+                    },
+                    fontFamily: { 
+                        'display': ['Lilita One', 'cursive'], 
+                        'body': ['Nunito', 'sans-serif'], 
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        body { 
+            font-family: 'Nunito', sans-serif; 
+            background-color: var(--brand-light-blue, #EFF9FF);
+            color: var(--brand-dark, #333333);
+        }
+        .font-display { font-family: 'Lilita One', cursive; }
+        .btn {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .menu-card {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .menu-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .cart-open {
+            transform: translateX(0);
+        }
+        .cart-closed {
+            transform: translateX(100%);
+        }
+        @media (max-width: 768px) {
+            .cart-closed {
+                transform: translateY(100%);
+            }
+            .cart-open {
+                transform: translateY(0);
+            }
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="antialiased">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>

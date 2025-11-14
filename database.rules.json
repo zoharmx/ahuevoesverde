@@ -1,0 +1,38 @@
+{
+  "rules": {
+    "orders": {
+      ".read": "auth != null && (auth.token.email == 'admin@ahuevoesverde.com' || auth.token.email.matches(/.*@ahuevoesverde\\.com$/))",
+      ".write": "auth != null && (auth.token.email == 'admin@ahuevoesverde.com' || auth.token.email.matches(/.*@ahuevoesverde\\.com$/))",
+      "$orderId": {
+        ".read": true,
+        ".write": true
+      }
+    },
+    "notifications": {
+      ".read": "auth != null",
+      ".write": "auth != null && (auth.token.email == 'admin@ahuevoesverde.com' || auth.token.email.matches(/.*@ahuevoesverde\\.com$/))"
+    },
+    "archive": {
+      ".read": "auth != null && (auth.token.email == 'admin@ahuevoesverde.com' || auth.token.email.matches(/.*@ahuevoesverde\\.com$/))",
+      ".write": "auth != null && (auth.token.email == 'admin@ahuevoesverde.com' || auth.token.email.matches(/.*@ahuevoesverde\\.com$/))"
+    },
+    "menu": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.email == 'admin@ahuevoesverde.com' || auth.token.email.matches(/.*@ahuevoesverde\\.com$/))"
+    },
+    "inventory": {
+      ".read": "auth != null && (auth.token.email == 'admin@ahuevoesverde.com' || auth.token.email.matches(/.*@ahuevoesverde\\.com$/))",
+      ".write": "auth != null && (auth.token.email == 'admin@ahuevoesverde.com' || auth.token.email.matches(/.*@ahuevoesverde\\.com$/))"
+    },
+    "settings": {
+      ".read": "auth != null && (auth.token.email == 'admin@ahuevoesverde.com' || auth.token.email.matches(/.*@ahuevoesverde\\.com$/))",
+      ".write": "auth != null && auth.token.email == 'admin@ahuevoesverde.com'"
+    },
+    "users": {
+      "$userId": {
+        ".read": "auth != null && auth.uid == $userId",
+        ".write": "auth != null && auth.uid == $userId"
+      }
+    }
+  }
+}

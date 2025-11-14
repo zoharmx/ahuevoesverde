@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(nul)",
+      "Bash(copy \"images\\6f694ae6-8898-4889-a769-82766dbf3725.png\" \"public\\images\\6f694ae6-8898-4889-a769-82766dbf3725.png\")",
+      "Bash(tree:*)",
+      "Bash(dir /S /B)",
+      "Bash(copy \"images\\jugodenaranja.png\" \"public\\images\\jugodenaranja.png\")",
+      "Bash(copy \"images\\jugodepiña.png\" \"public\\images\\jugodepina.png\")",
+      "Bash(copy \"images\\ahuevomexicano.png\" \"public\\images\\ahuevomexicano.png\")",
+      "Bash(copy \"images\\ahuevochilango.png\" \"public\\images\\ahuevochilango.png\")",
+      "Bash(copy \"images\\jugoverde.png\" \"public\\images\\jugoverde.png\")",
+      "Bash(copy \"images\\ahuevohomelet.png\" \"public\\images\\ahuevohomelet.png\")",
+      "Bash(copy \"images\\ahuevosonora.png\" \"public\\images\\ahuevosonora.png\")",
+      "Bash(copy \"images\\ahuevoveracruz.png\" \"public\\images\\ahuevoveracruz.png\")",
+      "Bash(copy \"images\\cafedeolla.png\" \"public\\images\\cafedeolla.png\")",
+      "Bash(copy \"images\\jugodemelon.png\" \"public\\images\\jugodemelon.png\")",
+      "Bash(cp:*)",
+      "Bash(firebase deploy:*)",
+      "Bash(dir functionsnode_modules 2)",
+      "Bash(dir:*)",
+      "Bash(npm install:*)",
+      "Bash(firebase functions:config:set:*)",
+      "Bash(firebase projects:list:*)",
+      "Bash(del /f \"C:\\Users\\jesus\\ahuevoesverde\\functions\\whatsapp.js\")",
+      "Bash(del /f \"C:\\Users\\jesus\\ahuevoesverde\\functions\\setup-whatsapp.js\")",
+      "Bash(node -e:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(findstr:*)",
+      "Bash(node:*)",
+      "Bash(curl:*)",
+      "Bash(cmd /c copy \"images\\jugodepiña.png\" \"public\\images\\jugodepina.png\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

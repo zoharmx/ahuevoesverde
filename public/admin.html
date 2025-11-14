@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - A Huevo Es Verde</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Firebase SDK (Auto-configured by Firebase Hosting) -->
+    <script defer src="/__/firebase/12.5.0/firebase-app-compat.js"></script>
+    <script defer src="/__/firebase/12.5.0/firebase-auth-compat.js"></script>
+    <script defer src="/__/firebase/12.5.0/firebase-database-compat.js"></script>
+    <script defer src="/__/firebase/init.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #FDB813 0%, #7CB342 50%, #66D9EF 100%);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .status-pending {
+            background-color: #FFF3CD;
+            border-left: 4px solid #FF9800;
+        }
+
+        .status-preparing {
+            background-color: #D1ECF1;
+            border-left: 4px solid #2196F3;
+        }
+
+        .status-delivering {
+            background-color: #E7D4F5;
+            border-left: 4px solid #9C27B0;
+        }
+
+        .status-delivered {
+            background-color: #D4EDDA;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .notification-badge {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: .5;
+            }
+        }
+
+        .timer-running {
+            color: #FF5722;
+            font-weight: 600;
+        }
+
+        .kds-card {
+            min-height: 300px;
+            font-size: 1.2rem;
+        }
+
+        .fullscreen-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            background: white;
+            overflow-y: auto;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .print-content, .print-content * {
+                visibility: visible;
+            }
+            .print-content {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+        }
+
+        .tab-active {
+            border-bottom: 3px solid #FDB813;
+            color: #FDB813;
+            font-weight: 600;
+        }
+
+        .stat-card-clickable {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card-clickable:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-card-active {
+            ring: 3px;
+            ring-color: #FDB813;
+            box-shadow: 0 0 0 3px #FDB813;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FDB813, #F59E0B);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgba(253, 184, 19, 0.4);
+        }
+
+        .login-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Login Screen -->
+    <div id="loginScreen" class="min-h-screen gradient-bg flex items-center justify-center p-4">
+        <div class="login-card rounded-2xl shadow-2xl p-8 max-w-md w-full">
+            <div class="text-center mb-8">
+                <div class="bg-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <i class="fas fa-egg text-4xl" style="color: #FDB813;"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">A Huevo Es Verde</h1>
+                <p class="text-gray-600">Panel de Administración</p>
+            </div>
+
+            <!-- Google Sign-In Button -->
+            <div class="mb-6">
+                <button id="googleSignInBtn" class="w-full bg-white border-2 border-gray-300 rounded-lg py-3 px-4 flex items-center justify-center hover:bg-gray-50 transition duration-300 shadow-sm">
+                    <svg class="w-6 h-6 mr-3" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    <span class="text-gray-700 font-medium">Continuar con Google</span>
+                </button>
+            </div>
+
+            <div class="relative mb-6">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-300"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-4 bg-white text-gray-500">O inicia sesión con email</span>
+                </div>
+            </div>
+
+            <!-- Email/Password Login Form -->
+            <form id="emailLoginForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-2">Email</label>
+                    <input type="email" id="emailInput" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                           placeholder="admin@ahuevoesverde.com">
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-2">Contraseña</label>
+                    <input type="password" id="passwordInput" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                           placeholder="••••••••">
+                </div>
+                <button type="submit" class="w-full btn-primary text-white py-3 rounded-lg font-medium">
+                    Iniciar Sesión
+                </button>
+            </form>
+
+            <div id="loginError" class="mt-4 hidden">
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-sm">
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+                    <span id="loginErrorMessage"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="hidden">
+        <!-- Header -->
+        <header class="bg-white shadow-md sticky top-0 z-50">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full w-12 h-12 flex items-center justify-center">
+                            <i class="fas fa-egg text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-800">A Huevo Es Verde</h1>
+                            <p class="text-sm text-gray-500">Panel de Administración</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-4">
+                        <!-- Notification Bell -->
+                        <div class="relative">
+                            <button class="relative p-2 text-gray-600 hover:text-gray-800 transition">
+                                <i class="fas fa-bell text-2xl"></i>
+                                <span id="notificationBadge" class="hidden absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center notification-badge">0</span>
+                            </button>
+                        </div>
+
+                        <!-- User Profile -->
+                        <div class="flex items-center space-x-3 border-l pl-4">
+                            <img id="userPhoto" src="" alt="User" class="w-10 h-10 rounded-full border-2 border-yellow-400">
+                            <div class="hidden md:block">
+                                <p id="userName" class="text-sm font-medium text-gray-800"></p>
+                                <p id="userEmail" class="text-xs text-gray-500"></p>
+                            </div>
+                            <button id="signOutBtn" class="ml-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition text-sm">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Salir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-6">
+            <!-- Tabs Navigation -->
+            <div class="bg-white rounded-lg shadow-md mb-6">
+                <nav class="flex space-x-8 px-6">
+                    <button class="tab-btn tab-active py-4 text-gray-700 transition" data-tab="orders">
+                        <i class="fas fa-shopping-cart mr-2"></i>Pedidos
+                    </button>
+                    <button class="tab-btn py-4 text-gray-700 hover:text-yellow-500 transition" data-tab="kds">
+                        <i class="fas fa-utensils mr-2"></i>KDS
+                    </button>
+                    <button class="tab-btn py-4 text-gray-700 hover:text-yellow-500 transition" data-tab="analytics">
+                        <i class="fas fa-chart-line mr-2"></i>Analíticas
+                    </button>
+                    <button class="tab-btn py-4 text-gray-700 hover:text-yellow-500 transition" data-tab="settings">
+                        <i class="fas fa-cog mr-2"></i>Configuración
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Orders Tab -->
+            <div id="ordersTab" class="tab-content">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    <div id="statCardPending" class="bg-white rounded-lg shadow-md p-6 stat-card-clickable" data-filter="pending">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium">Pendientes</p>
+                                <p id="statPending" class="text-3xl font-bold text-orange-500 mt-2">0</p>
+                            </div>
+                            <div class="bg-orange-100 rounded-full w-14 h-14 flex items-center justify-center">
+                                <i class="fas fa-clock text-2xl text-orange-500"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="statCardPreparing" class="bg-white rounded-lg shadow-md p-6 stat-card-clickable" data-filter="preparing">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium">En Preparación</p>
+                                <p id="statPreparing" class="text-3xl font-bold text-blue-500 mt-2">0</p>
+                            </div>
+                            <div class="bg-blue-100 rounded-full w-14 h-14 flex items-center justify-center">
+                                <i class="fas fa-fire-burner text-2xl text-blue-500"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="statCardDelivering" class="bg-white rounded-lg shadow-md p-6 stat-card-clickable" data-filter="delivering">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium">En Entrega</p>
+                                <p id="statDelivering" class="text-3xl font-bold text-purple-500 mt-2">0</p>
+                            </div>
+                            <div class="bg-purple-100 rounded-full w-14 h-14 flex items-center justify-center">
+                                <i class="fas fa-motorcycle text-2xl text-purple-500"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="statCardCompleted" class="bg-white rounded-lg shadow-md p-6 stat-card-clickable" data-filter="delivered">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium">Completados Hoy</p>
+                                <p id="statCompleted" class="text-3xl font-bold text-green-500 mt-2">0</p>
+                            </div>
+                            <div class="bg-green-100 rounded-full w-14 h-14 flex items-center justify-center">
+                                <i class="fas fa-check-circle text-2xl text-green-500"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Controls -->
+                <div id="filterControls" class="hidden mb-6">
+                    <button id="clearFilterBtn" class="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition">
+                        <i class="fas fa-times mr-2"></i>Ver Todos los Pedidos
+                    </button>
+                </div>
+
+                <!-- Orders List -->
+                <div id="ordersList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Orders will be dynamically inserted here -->
+                </div>
+
+                <div id="noOrders" class="hidden text-center py-12">
+                    <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500 text-lg">No hay pedidos activos</p>
+                </div>
+            </div>
+
+            <!-- KDS Tab -->
+            <div id="kdsTab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-2xl font-bold text-gray-800">
+                            <i class="fas fa-utensils mr-2 text-yellow-500"></i>
+                            Kitchen Display System
+                        </h2>
+                        <button id="fullscreenBtn" class="px-6 py-3 btn-primary text-white rounded-lg font-medium">
+                            <i class="fas fa-expand mr-2"></i>Pantalla Completa
+                        </button>
+                    </div>
+                </div>
+
+                <div id="kdsOrdersList" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- KDS orders will be dynamically inserted here -->
+                </div>
+
+                <div id="noKdsOrders" class="hidden text-center py-12">
+                    <i class="fas fa-check-circle text-6xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500 text-lg">Todas las órdenes están listas</p>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analyticsTab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                        <i class="fas fa-chart-line mr-2 text-yellow-500"></i>
+                        Analíticas
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="text-center p-6 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg">
+                            <i class="fas fa-dollar-sign text-4xl text-yellow-600 mb-3"></i>
+                            <p class="text-gray-600 text-sm font-medium">Ventas Hoy</p>
+                            <p id="salesToday" class="text-3xl font-bold text-gray-800 mt-2">$0</p>
+                        </div>
+
+                        <div class="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-lg">
+                            <i class="fas fa-shopping-bag text-4xl text-green-600 mb-3"></i>
+                            <p class="text-gray-600 text-sm font-medium">Pedidos Totales</p>
+                            <p id="ordersToday" class="text-3xl font-bold text-gray-800 mt-2">0</p>
+                        </div>
+
+                        <div class="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg">
+                            <i class="fas fa-receipt text-4xl text-purple-600 mb-3"></i>
+                            <p class="text-gray-600 text-sm font-medium">Ticket Promedio</p>
+                            <p id="avgTicket" class="text-3xl font-bold text-gray-800 mt-2">$0</p>
+                        </div>
+
+                        <div class="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
+                            <i class="fas fa-clock text-4xl text-blue-600 mb-3"></i>
+                            <p class="text-gray-600 text-sm font-medium">Tiempo Promedio</p>
+                            <p id="avgTime" class="text-3xl font-bold text-gray-800 mt-2">0 min</p>
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Productos Más Vendidos</h3>
+                        <div id="topProducts" class="space-y-3">
+                            <!-- Top products will be shown here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settingsTab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                        <i class="fas fa-cog mr-2 text-yellow-500"></i>
+                        Configuración
+                    </h2>
+
+                    <div class="space-y-6">
+                        <div class="border-b pb-6">
+                            <h3 class="text-lg font-semibold text-gray-700 mb-4">Notificaciones</h3>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="font-medium text-gray-800">Sonido de Nuevos Pedidos</p>
+                                    <p class="text-sm text-gray-500">Reproducir sonido cuando llegue un nuevo pedido</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="soundToggle" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-yellow-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="border-b pb-6">
+                            <h3 class="text-lg font-semibold text-gray-700 mb-4">Usuarios Autorizados</h3>
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <ul class="space-y-2 text-gray-700">
+                                    <li><i class="fas fa-user-check text-green-500 mr-2"></i>admin@ahuevoesverde.com</li>
+                                    <li><i class="fas fa-user-check text-green-500 mr-2"></i>*@ahuevoesverde.com</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-700 mb-4">Información del Sistema</h3>
+                            <div class="bg-gray-50 rounded-lg p-4 space-y-2">
+                                <p class="text-gray-700"><span class="font-medium">Versión:</span> 1.0.0</p>
+                                <p class="text-gray-700"><span class="font-medium">Última actualización:</span> 2025-11-11</p>
+                                <p class="text-gray-700"><span class="font-medium">Firebase:</span> Conectado</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Print Template (Hidden) -->
+    <div id="printTemplate" class="print-content hidden"></div>
+
+    <!-- Audio for notifications -->
+    <audio id="notificationSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBzKJ0fPTgjMGHm7A7+OZTA0PVqzn77BiGwY+ltryxnYpBSp+zPLaizsIGGS57OihUBELTKXh8bllHAU2jdXzzn0vBSh6yO/ekjwKElyx6OyrWBUIQ5zg8sFtIQc0iNHz1YU2Bhxqvu7mnE0NDlOq5O+zYhsGPZPY88p5KwUofMry3I4+CRZitOjuqVkSCkii4fK7aiAHM4nR89OBMgYfbL/u5ppNDQ5UquTvs2IbBj2T2PPKeSsFKHzK8tyOPgkWYrTo7qlZEgpIouHyu2ogBzOJ0fPTgTIGH2y/7uaaTQ0OVKrk77NiGwY9k9jzynkrBSh8yvLcjj4JFmK06O6pWRIKSKLh8rtqIAczidHz04EyBh9sv+7mmk0NDlSq5O+zYhsGPZPY88p5KwUofMry3I4+CRZitOjuqVkSCkii4fK7aiAHM4nR89OBMgYfbL/u5ppNDQ5UquTvs2IbBj2T2PPKeSsFKHzK8tyOPgkWYrTo7qlZEgpIouHyu2ogBzOJ0fPTgTIGH2y/7uaaTQ0OVKrk77NiGwY9k9jzynkrBSh8yvLcjj4JFmK06O6pWRIKSKLh8rtqIAczidHz04EyBh9sv+7mmk0NDlSq5O+zYhsGPZPY88p5KwUofMry3I4+CRZitOjuqVkSCkii4fK7aiAHM4nR89OBMgYfbL/u5ppNDQ5UquTvs2IbBj2T2PPKeSsFKHzK8tyOPgkWYrTo7qlZEgpIouHyu2ogBzOJ0fPTgTIGH2y/7uaaTQ0OVKrk77NiGwY9k9jzynkrBSh8yvLcjj4JFmK06O6pWRIKSKLh8rtqIAczidHz04EyBh9sv+7mmk0NDlSq5O+zYhsGPZPY88p5KwUofMry3I4+CRZitOjuqVkSCkii4fK7aiAHM4nR89OBMgYfbL/u5ppNDQ5UquTvs2IbBj2T2PPKeSsFKHzK8tyOPgkWYrTo7qlZEgpIouHyu2ogBzOJ0fPTgTIGH2y/7uaaTQ0OVKrk77NiGwY9k9jzynkrBSh8yvLcjj4JFmK06O6pWRIKSKLh8rtqIAczidHz04EyBh9sv+7mmk0NDlSq5O+zYhsGPZPY88p5KwUofMry3I4+CRZitOjuqVkSCkii4fK7aiAHM4nR89OBMgYfbL/u5ppNDQ5UquTvs2IbBj2T2PPKeSsFKHzK8tyOPgkWYrTo7qlZEgpIouHyu2ogBzOJ0fPTgTIGH2y/7uaaTQ0OVKrk77NiGwY9k9jzynkrBSh8yvLcjj4JFmK06O6pWRIKSKLh8rtqIAczidHz04EyBh9sv+7mmk0NDlSq5O+zYhsGPZPY88p5KwUofMry3I4+CRZitOjuqVkSCkii4fK7aiAHM4nR89OBMgYfbL/u5ppNDQ5UquTvs2IbBj2T2PPKeSsFKHzK8tyOPgkWYrTo7qlZEgpIouHyu2ogBzOJ0fPTgTIGH2y/7uaaTQ0OVKrk77NiGwY9k9jzynkrBSh8yvLcjj4JFmK06O6pWRIKSKLh8rtqIAczidHz04EyBh9sv+7mmk0NDlSq5O+zYhsGPZPY88p5KwUofMry3I4+CRZitOjuqVkSCkii4fK7aiAHM4nR89OBMgYfbL/u5ppNDQ5UquTvs2IbBj2T2PPKeSsFKHzK8tyOPgkWYrTo7qlZEgpIouHyu2ogBzOJ0fPTgTIGH2y/7uaaTQ0OVKrk77NiGwY9k9jzynkrBSh8yvLcjj4JFmK06O6pWRIKSKLh8rtqIAczidHz04EyBh9sv+7mmk0NDlSq5O+zYhsGPZPY88p5K=" type="audio/wav">
+    </audio>
+
+    <script>
+        // Firebase will be auto-initialized by /__/firebase/init.js
+        // Wait for Firebase to be ready
+        let auth = null;
+        let database = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Firebase is now initialized automatically
+            auth = firebase.auth();
+            database = firebase.database();
+
+            // Initialize the app after Firebase is ready
+            initializeApp();
+        });
+
+        function initializeApp() {
+            // Auth state observer
+            auth.onAuthStateChanged(handleAuthStateChanged);
+        }
+
+        // Handle authentication state changes
+        function handleAuthStateChanged(user) {
+            if (user) {
+                const email = user.email;
+                if (isAuthorized(email)) {
+                    currentUser = user;
+                    showDashboard();
+                } else {
+                    auth.signOut();
+                    showError('No tienes autorización para acceder a este panel.');
+                }
+            } else {
+                currentUser = null;
+                showLogin();
+            }
+        }
+
+        // Global variables
+        let currentUser = null;
+        let ordersListener = null;
+        let soundEnabled = true;
+        let lastOrderCount = 0;
+        let currentFilter = null;
+        let allOrders = null;
+        let kdsAutoRefreshInterval = null;
+
+        // Authorized emails
+        const authorizedEmails = ['admin@ahuevoesverde.com'];
+        const authorizedDomain = '@ahuevoesverde.com';
+
+        // DOM Elements
+        const loginScreen = document.getElementById('loginScreen');
+        const adminDashboard = document.getElementById('adminDashboard');
+        const googleSignInBtn = document.getElementById('googleSignInBtn');
+        const emailLoginForm = document.getElementById('emailLoginForm');
+        const signOutBtn = document.getElementById('signOutBtn');
+        const loginError = document.getElementById('loginError');
+        const notificationSound = document.getElementById('notificationSound');
+
+        // Check if user is authorized
+        function isAuthorized(email) {
+            if (!email) return false;
+            return authorizedEmails.includes(email) || email.endsWith(authorizedDomain);
+        }
+
+        // Show error message
+        function showError(message) {
+            document.getElementById('loginErrorMessage').textContent = message;
+            loginError.classList.remove('hidden');
+            setTimeout(() => {
+                loginError.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Google Sign-In
+        googleSignInBtn.addEventListener('click', async () => {
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                const result = await auth.signInWithPopup(provider);
+                const email = result.user.email;
+
+                if (!isAuthorized(email)) {
+                    await auth.signOut();
+                    showError('No tienes autorización para acceder a este panel.');
+                    return;
+                }
+
+                currentUser = result.user;
+                showDashboard();
+            } catch (error) {
+                console.error('Error during Google sign in:', error);
+                showError('Error al iniciar sesión con Google: ' + error.message);
+            }
+        });
+
+        // Email/Password Sign-In
+        emailLoginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+
+            if (!isAuthorized(email)) {
+                showError('No tienes autorización para acceder a este panel.');
+                return;
+            }
+
+            try {
+                const result = await auth.signInWithEmailAndPassword(email, password);
+                currentUser = result.user;
+                showDashboard();
+            } catch (error) {
+                console.error('Error during email sign in:', error);
+                showError('Error al iniciar sesión: ' + error.message);
+            }
+        });
+
+        // Sign Out
+        signOutBtn.addEventListener('click', async () => {
+            try {
+                await auth.signOut();
+                currentUser = null;
+                if (ordersListener) {
+                    ordersListener.off();
+                }
+                loginScreen.classList.remove('hidden');
+                adminDashboard.classList.add('hidden');
+            } catch (error) {
+                console.error('Error during sign out:', error);
+            }
+        });
+
+        // Show Dashboard
+        function showDashboard() {
+            document.getElementById('userName').textContent = currentUser.displayName || 'Admin';
+            document.getElementById('userEmail').textContent = currentUser.email;
+            document.getElementById('userPhoto').src = currentUser.photoURL || 'https://via.placeholder.com/100';
+
+            loginScreen.classList.add('hidden');
+            adminDashboard.classList.remove('hidden');
+
+            // Start listening to orders
+            listenToOrders();
+        }
+
+        function showLogin() {
+            loginScreen.classList.remove('hidden');
+            adminDashboard.classList.add('hidden');
+
+            // Stop listening to orders
+            if (ordersListener) {
+                ordersListener.off();
+                ordersListener = null;
+            }
+        }
+
+        // Tab Navigation
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabName = button.getAttribute('data-tab');
+
+                // Update active tab
+                tabButtons.forEach(btn => btn.classList.remove('tab-active'));
+                button.classList.add('tab-active');
+
+                // Show corresponding content
+                tabContents.forEach(content => content.classList.add('hidden'));
+                document.getElementById(`${tabName}Tab`).classList.remove('hidden');
+
+                // Setup KDS auto-refresh when switching to KDS tab
+                if (tabName === 'kds') {
+                    setupKdsAutoRefresh();
+                } else {
+                    clearKdsAutoRefresh();
+                }
+            });
+        });
+
+        // Stat cards filter functionality
+        document.querySelectorAll('.stat-card-clickable').forEach(card => {
+            card.addEventListener('click', () => {
+                const filterStatus = card.getAttribute('data-filter');
+
+                // Toggle filter
+                if (currentFilter === filterStatus) {
+                    // Clear filter if clicking same card
+                    clearFilter();
+                } else {
+                    // Apply new filter
+                    applyFilter(filterStatus);
+                }
+            });
+        });
+
+        // Clear filter button
+        document.getElementById('clearFilterBtn').addEventListener('click', clearFilter);
+
+        function applyFilter(status) {
+            currentFilter = status;
+
+            // Update visual indication
+            document.querySelectorAll('.stat-card-clickable').forEach(card => {
+                card.classList.remove('stat-card-active');
+            });
+
+            const activeCard = document.querySelector(`[data-filter="${status}"]`);
+            if (activeCard) {
+                activeCard.classList.add('stat-card-active');
+            }
+
+            // Show clear filter button
+            document.getElementById('filterControls').classList.remove('hidden');
+
+            // Re-display orders with filter
+            displayOrders(allOrders);
+        }
+
+        function clearFilter() {
+            currentFilter = null;
+
+            // Remove visual indication
+            document.querySelectorAll('.stat-card-clickable').forEach(card => {
+                card.classList.remove('stat-card-active');
+            });
+
+            // Hide clear filter button
+            document.getElementById('filterControls').classList.add('hidden');
+
+            // Re-display all orders
+            displayOrders(allOrders);
+        }
+
+        function setupKdsAutoRefresh() {
+            // Clear any existing interval
+            clearKdsAutoRefresh();
+
+            // Setup new interval for 5 seconds
+            kdsAutoRefreshInterval = setInterval(() => {
+                if (allOrders) {
+                    displayKdsOrders(allOrders);
+                }
+            }, 5000);
+        }
+
+        function clearKdsAutoRefresh() {
+            if (kdsAutoRefreshInterval) {
+                clearInterval(kdsAutoRefreshInterval);
+                kdsAutoRefreshInterval = null;
+            }
+        }
+
+        // Listen to orders in real-time
+        function listenToOrders() {
+            ordersListener = database.ref('orders');
+
+            ordersListener.on('value', (snapshot) => {
+                const orders = snapshot.val();
+                allOrders = orders; // Store for filtering
+                updateStats(orders);
+                displayOrders(orders);
+                displayKdsOrders(orders);
+                updateAnalytics(orders);
+
+                // Check for new orders
+                if (orders) {
+                    const activeCount = Object.keys(orders).filter(key =>
+                        ['pending', 'preparing', 'delivering'].includes(orders[key].status)
+                    ).length;
+
+                    const pendingCount = Object.keys(orders).filter(key =>
+                        orders[key].status === 'pending'
+                    ).length;
+
+                    if (activeCount > lastOrderCount && lastOrderCount > 0) {
+                        playNotificationSound();
+                    }
+
+                    updateNotificationBadge(activeCount);
+
+                    // Pulse bell if there are pending orders
+                    const bellIcon = document.querySelector('.fa-bell');
+                    if (pendingCount > 0) {
+                        bellIcon.classList.add('notification-badge');
+                    } else {
+                        bellIcon.classList.remove('notification-badge');
+                    }
+
+                    lastOrderCount = activeCount;
+                }
+            });
+        }
+
+        // Update stats
+        function updateStats(orders) {
+            let pending = 0, preparing = 0, delivering = 0, completed = 0;
+
+            if (orders) {
+                const today = new Date().toDateString();
+
+                Object.values(orders).forEach(order => {
+                    const orderDate = new Date(order.timestamp).toDateString();
+
+                    // Skip cancelled orders in stats
+                    if (order.status === 'cancelled') return;
+
+                    switch(order.status) {
+                        case 'pending':
+                            pending++;
+                            break;
+                        case 'preparing':
+                            preparing++;
+                            break;
+                        case 'delivering':
+                            delivering++;
+                            break;
+                        case 'delivered':
+                            if (orderDate === today) completed++;
+                            break;
+                    }
+                });
+            }
+
+            document.getElementById('statPending').textContent = pending;
+            document.getElementById('statPreparing').textContent = preparing;
+            document.getElementById('statDelivering').textContent = delivering;
+            document.getElementById('statCompleted').textContent = completed;
+        }
+
+        // Display orders
+        function displayOrders(orders) {
+            const ordersList = document.getElementById('ordersList');
+            const noOrders = document.getElementById('noOrders');
+
+            ordersList.innerHTML = '';
+
+            if (!orders) {
+                noOrders.classList.remove('hidden');
+                return;
+            }
+
+            let activeOrders = Object.entries(orders)
+                .filter(([_, order]) => order.status !== 'delivered' && order.status !== 'cancelled')
+                .sort((a, b) => b[1].timestamp - a[1].timestamp);
+
+            // Apply filter if active
+            if (currentFilter) {
+                if (currentFilter === 'delivered') {
+                    // For completed, show only today's completed orders
+                    const today = new Date().toDateString();
+                    activeOrders = Object.entries(orders)
+                        .filter(([_, order]) => {
+                            const orderDate = new Date(order.timestamp).toDateString();
+                            return order.status === 'delivered' && orderDate === today;
+                        })
+                        .sort((a, b) => b[1].timestamp - a[1].timestamp);
+                } else {
+                    activeOrders = activeOrders.filter(([_, order]) => order.status === currentFilter);
+                }
+            }
+
+            if (activeOrders.length === 0) {
+                noOrders.classList.remove('hidden');
+                return;
+            }
+
+            noOrders.classList.add('hidden');
+
+            activeOrders.forEach(([orderId, order]) => {
+                const orderCard = createOrderCard(orderId, order);
+                ordersList.appendChild(orderCard);
+            });
+        }
+
+        // Create order card
+        function createOrderCard(orderId, order) {
+            const card = document.createElement('div');
+            const statusClass = `status-${order.status}`;
+            const statusColors = {
+                pending: { bg: 'bg-orange-500', text: 'Pendiente' },
+                preparing: { bg: 'bg-blue-500', text: 'En Preparación' },
+                delivering: { bg: 'bg-purple-500', text: 'En Camino' },
+                delivered: { bg: 'bg-green-500', text: 'Entregado' }
+            };
+
+            const elapsed = getElapsedTime(order.timestamp);
+            const isPaid = order.paid === true;
+
+            card.className = `${statusClass} rounded-lg shadow-md p-6 card-hover`;
+            card.innerHTML = `
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="${statusColors[order.status].bg} text-white px-3 py-1 rounded-full text-sm font-medium">
+                            ${statusColors[order.status].text}
+                        </div>
+                        ${!isPaid ? '<span class="bg-red-500 text-white px-2 py-1 rounded text-xs font-medium">NO PAGADO</span>' : ''}
+                        <span class="timer-running">${elapsed}</span>
+                    </div>
+                    <button onclick="printOrder('${orderId}')" class="text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-print text-xl"></i>
+                    </button>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="font-bold text-lg mb-2">Pedido #${orderId.substr(-6).toUpperCase()}</h3>
+                    <p class="text-sm text-gray-600 mb-1">
+                        <i class="fas fa-clock mr-2"></i>${new Date(order.timestamp).toLocaleString('es-MX')}
+                    </p>
+                    ${order.customerName ? `<p class="text-sm text-gray-600 mb-1">
+                        <i class="fas fa-user mr-2"></i>${order.customerName}
+                    </p>` : ''}
+                    <p class="text-sm text-gray-600 mb-1">
+                        <i class="fas fa-phone mr-2"></i>${order.phone}
+                    </p>
+                    <p class="text-sm text-gray-600">
+                        <i class="fas fa-map-marker-alt mr-2"></i>${order.address}
+                    </p>
+                </div>
+
+                <div class="border-t pt-4 mb-4">
+                    <h4 class="font-semibold mb-2">Productos:</h4>
+                    <ul class="space-y-2">
+                        ${order.items.map(item => `
+                            <li class="flex justify-between text-sm">
+                                <span>${item.quantity}x ${item.name}</span>
+                                <span class="font-medium">$${item.price * item.quantity}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    ${order.notes ? `<p class="text-sm text-gray-600 mt-2 italic">
+                        <i class="fas fa-sticky-note mr-2"></i>${order.notes}
+                    </p>` : ''}
+                </div>
+
+                <div class="border-t pt-4 mb-4">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-lg">Total:</span>
+                        <span class="font-bold text-xl text-gray-800">$${order.total}</span>
+                    </div>
+                </div>
+
+                <!-- Status Change Dropdown -->
+                <div class="mb-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Cambiar Estado:</label>
+                    <select onchange="changeOrderStatus('${orderId}', this.value)"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                        <option value="">-- Seleccionar --</option>
+                        <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pendiente</option>
+                        <option value="preparing" ${order.status === 'preparing' ? 'selected' : ''}>En Preparación</option>
+                        <option value="delivering" ${order.status === 'delivering' ? 'selected' : ''}>En Entrega</option>
+                        <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Completado</option>
+                    </select>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-2 gap-2">
+                    ${order.status === 'pending' && !isPaid ? `
+                        <button onclick="markAsPaid('${orderId}')"
+                                class="bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-medium transition text-sm">
+                            <i class="fas fa-dollar-sign mr-1"></i>Pago Manual
+                        </button>
+                    ` : ''}
+                    ${order.status === 'pending' ? `
+                        <button onclick="updateOrderStatus('${orderId}', 'preparing')"
+                                class="bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg font-medium transition text-sm">
+                            <i class="fas fa-fire-burner mr-1"></i>Preparar
+                        </button>
+                    ` : ''}
+                    ${order.status === 'preparing' ? `
+                        <button onclick="updateOrderStatus('${orderId}', 'delivering')"
+                                class="col-span-2 bg-purple-500 hover:bg-purple-600 text-white py-2 rounded-lg font-medium transition text-sm">
+                            <i class="fas fa-motorcycle mr-1"></i>Entregar
+                        </button>
+                    ` : ''}
+                    ${order.status === 'delivering' ? `
+                        <button onclick="updateOrderStatus('${orderId}', 'delivered')"
+                                class="col-span-2 bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-medium transition text-sm">
+                            <i class="fas fa-check-circle mr-1"></i>Completar
+                        </button>
+                    ` : ''}
+                    <button onclick="cancelOrder('${orderId}')"
+                            class="${order.status === 'pending' && !isPaid ? '' : 'col-span-2'} bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg font-medium transition text-sm">
+                        <i class="fas fa-times-circle mr-1"></i>Cancelar
+                    </button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Display KDS orders
+        function displayKdsOrders(orders) {
+            const kdsOrdersList = document.getElementById('kdsOrdersList');
+            const noKdsOrders = document.getElementById('noKdsOrders');
+
+            kdsOrdersList.innerHTML = '';
+
+            if (!orders) {
+                noKdsOrders.classList.remove('hidden');
+                return;
+            }
+
+            const kitchenOrders = Object.entries(orders)
+                .filter(([_, order]) => order.status === 'pending' || order.status === 'preparing')
+                .sort((a, b) => a[1].timestamp - b[1].timestamp);
+
+            if (kitchenOrders.length === 0) {
+                noKdsOrders.classList.remove('hidden');
+                return;
+            }
+
+            noKdsOrders.classList.add('hidden');
+
+            kitchenOrders.forEach(([orderId, order]) => {
+                const kdsCard = createKdsCard(orderId, order);
+                kdsOrdersList.appendChild(kdsCard);
+            });
+        }
+
+        // Create KDS card
+        function createKdsCard(orderId, order) {
+            const card = document.createElement('div');
+            const statusClass = `status-${order.status}`;
+            const elapsed = getElapsedTime(order.timestamp);
+
+            card.className = `${statusClass} rounded-lg shadow-lg p-8 kds-card`;
+            card.innerHTML = `
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-3xl font-bold">Pedido #${orderId.substr(-6).toUpperCase()}</h2>
+                    <span class="text-2xl timer-running">${elapsed}</span>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Productos:</h3>
+                    <ul class="space-y-4">
+                        ${order.items.map(item => `
+                            <li class="text-2xl flex items-center">
+                                <span class="bg-white rounded-full w-12 h-12 flex items-center justify-center mr-4 font-bold">${item.quantity}</span>
+                                <span>${item.name}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+
+                ${order.notes ? `
+                    <div class="border-t pt-4 mb-6">
+                        <p class="text-xl">
+                            <i class="fas fa-sticky-note mr-2"></i>
+                            <strong>Nota:</strong> ${order.notes}
+                        </p>
+                    </div>
+                ` : ''}
+
+                <div class="flex gap-4">
+                    ${order.status === 'pending' ? `
+                        <button onclick="updateOrderStatus('${orderId}', 'preparing')"
+                                class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-4 rounded-lg font-bold text-xl transition">
+                            <i class="fas fa-fire-burner mr-2"></i>Comenzar
+                        </button>
+                    ` : `
+                        <button onclick="updateOrderStatus('${orderId}', 'delivering')"
+                                class="flex-1 bg-purple-500 hover:bg-purple-600 text-white py-4 rounded-lg font-bold text-xl transition">
+                            <i class="fas fa-check-circle mr-2"></i>Listo para Entregar
+                        </button>
+                    `}
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Get elapsed time
+        function getElapsedTime(timestamp) {
+            const now = Date.now();
+            const diff = now - timestamp;
+            const minutes = Math.floor(diff / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Update order status
+        window.updateOrderStatus = async function(orderId, newStatus) {
+            try {
+                await database.ref(`orders/${orderId}/status`).set(newStatus);
+
+                if (newStatus === 'delivered') {
+                    await database.ref(`orders/${orderId}/completedAt`).set(Date.now());
+                }
+            } catch (error) {
+                console.error('Error updating order status:', error);
+                alert('Error al actualizar el estado del pedido');
+            }
+        };
+
+        // Change order status (from dropdown - reversible)
+        window.changeOrderStatus = async function(orderId, newStatus) {
+            if (!newStatus) return;
+
+            try {
+                const orderRef = database.ref(`orders/${orderId}`);
+                const snapshot = await orderRef.once('value');
+                const order = snapshot.val();
+
+                if (!order) {
+                    alert('Pedido no encontrado');
+                    return;
+                }
+
+                const statusNames = {
+                    pending: 'Pendiente',
+                    preparing: 'En Preparación',
+                    delivering: 'En Entrega',
+                    delivered: 'Completado'
+                };
+
+                const confirmed = confirm(`¿Cambiar estado de "${statusNames[order.status]}" a "${statusNames[newStatus]}"?`);
+
+                if (confirmed) {
+                    await orderRef.update({ status: newStatus });
+
+                    if (newStatus === 'delivered') {
+                        await orderRef.update({ completedAt: Date.now() });
+                    }
+                } else {
+                    // Reset dropdown to current status
+                    displayOrders(allOrders);
+                }
+            } catch (error) {
+                console.error('Error changing order status:', error);
+                alert('Error al cambiar el estado del pedido');
+            }
+        };
+
+        // Cancel order
+        window.cancelOrder = async function(orderId) {
+            const confirmed = confirm('¿Estás seguro de que deseas cancelar este pedido?\n\nEsta acción no se puede deshacer.');
+
+            if (confirmed) {
+                try {
+                    await database.ref(`orders/${orderId}/status`).set('cancelled');
+                    await database.ref(`orders/${orderId}/cancelledAt`).set(Date.now());
+                    alert('Pedido cancelado exitosamente');
+                } catch (error) {
+                    console.error('Error cancelling order:', error);
+                    alert('Error al cancelar el pedido');
+                }
+            }
+        };
+
+        // Mark as paid (manual payment)
+        window.markAsPaid = async function(orderId) {
+            const confirmed = confirm('¿Confirmar pago manual de este pedido?\n\nEl pedido pasará a estado "En Preparación".');
+
+            if (confirmed) {
+                try {
+                    const updates = {
+                        paid: true,
+                        paidAt: Date.now(),
+                        paymentMethod: 'manual',
+                        status: 'preparing'
+                    };
+
+                    await database.ref(`orders/${orderId}`).update(updates);
+                    alert('Pago confirmado. Pedido en preparación.');
+                } catch (error) {
+                    console.error('Error marking as paid:', error);
+                    alert('Error al confirmar el pago');
+                }
+            }
+        };
+
+        // Print order
+        window.printOrder = function(orderId) {
+            database.ref(`orders/${orderId}`).once('value', (snapshot) => {
+                const order = snapshot.val();
+                const printTemplate = document.getElementById('printTemplate');
+
+                printTemplate.innerHTML = `
+                    <div style="padding: 20px; font-family: monospace;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <h1 style="font-size: 24px; margin: 0;">A HUEVO ES VERDE</h1>
+                            <p>Pedido #${orderId.substr(-6).toUpperCase()}</p>
+                            <p>${new Date(order.timestamp).toLocaleString('es-MX')}</p>
+                        </div>
+
+                        <div style="border-top: 2px dashed #000; border-bottom: 2px dashed #000; padding: 10px 0; margin: 20px 0;">
+                            ${order.customerName ? `<p><strong>Cliente:</strong> ${order.customerName}</p>` : ''}
+                            <p><strong>Teléfono:</strong> ${order.phone}</p>
+                            <p><strong>Dirección:</strong> ${order.address}</p>
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <h2 style="font-size: 18px;">PRODUCTOS</h2>
+                            ${order.items.map(item => `
+                                <div style="display: flex; justify-content: space-between; margin: 5px 0;">
+                                    <span>${item.quantity}x ${item.name}</span>
+                                    <span>$${item.price * item.quantity}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        ${order.notes ? `
+                            <div style="margin: 20px 0;">
+                                <p><strong>Notas:</strong> ${order.notes}</p>
+                            </div>
+                        ` : ''}
+
+                        <div style="border-top: 2px dashed #000; padding-top: 10px; margin-top: 20px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 20px;">
+                                <strong>TOTAL:</strong>
+                                <strong>$${order.total}</strong>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                printTemplate.classList.remove('hidden');
+                window.print();
+                printTemplate.classList.add('hidden');
+            });
+        };
+
+        // Update analytics
+        function updateAnalytics(orders) {
+            if (!orders) {
+                document.getElementById('salesToday').textContent = '$0';
+                document.getElementById('ordersToday').textContent = '0';
+                document.getElementById('avgTicket').textContent = '$0';
+                document.getElementById('avgTime').textContent = '0 min';
+                document.getElementById('topProducts').innerHTML = '<p class="text-gray-500">No hay datos disponibles</p>';
+                return;
+            }
+
+            const today = new Date().toDateString();
+            let salesToday = 0;
+            let ordersToday = 0;
+            let totalTime = 0;
+            let completedToday = 0;
+            const productsCount = {};
+
+            Object.values(orders).forEach(order => {
+                const orderDate = new Date(order.timestamp).toDateString();
+
+                // Skip cancelled orders in analytics
+                if (order.status === 'cancelled') return;
+
+                if (orderDate === today) {
+                    ordersToday++;
+                    salesToday += parseFloat(order.total);
+
+                    if (order.status === 'delivered' && order.completedAt) {
+                        const time = (order.completedAt - order.timestamp) / 60000;
+                        totalTime += time;
+                        completedToday++;
+                    }
+
+                    // Count products
+                    order.items.forEach(item => {
+                        if (!productsCount[item.name]) {
+                            productsCount[item.name] = 0;
+                        }
+                        productsCount[item.name] += item.quantity;
+                    });
+                }
+            });
+
+            document.getElementById('salesToday').textContent = `$${salesToday.toFixed(2)}`;
+            document.getElementById('ordersToday').textContent = ordersToday;
+
+            const avgTicket = ordersToday > 0 ? (salesToday / ordersToday).toFixed(2) : 0;
+            document.getElementById('avgTicket').textContent = `$${avgTicket}`;
+
+            const avgTime = completedToday > 0 ? (totalTime / completedToday).toFixed(0) : 0;
+            document.getElementById('avgTime').textContent = `${avgTime} min`;
+
+            // Display top products
+            const topProducts = Object.entries(productsCount)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+
+            const topProductsHtml = topProducts.map(([product, count], index) => `
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div class="flex items-center space-x-3">
+                        <span class="bg-yellow-400 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">${index + 1}</span>
+                        <span class="font-medium">${product}</span>
+                    </div>
+                    <span class="text-gray-600">${count} vendidos</span>
+                </div>
+            `).join('');
+
+            document.getElementById('topProducts').innerHTML = topProductsHtml || '<p class="text-gray-500">No hay datos disponibles</p>';
+        }
+
+        // Play notification sound
+        function playNotificationSound() {
+            if (soundEnabled) {
+                notificationSound.play().catch(err => console.log('Could not play sound:', err));
+            }
+        }
+
+        // Update notification badge
+        function updateNotificationBadge(count) {
+            const badge = document.getElementById('notificationBadge');
+            if (count > 0) {
+                badge.textContent = count;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        // Sound toggle
+        document.getElementById('soundToggle').addEventListener('change', (e) => {
+            soundEnabled = e.target.checked;
+        });
+
+        // Fullscreen KDS
+        document.getElementById('fullscreenBtn').addEventListener('click', () => {
+            const kdsTab = document.getElementById('kdsTab');
+
+            if (!document.fullscreenElement) {
+                kdsTab.requestFullscreen().catch(err => {
+                    console.error('Error attempting to enable fullscreen:', err);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        // Update timers every second
+        setInterval(() => {
+            document.querySelectorAll('.timer-running').forEach(timer => {
+                const card = timer.closest('[class*="status-"]');
+                if (card) {
+                    const orderId = card.querySelector('button[onclick*="updateOrderStatus"]')
+                        ?.getAttribute('onclick')
+                        ?.match(/'([^']+)'/)?.[1];
+
+                    if (orderId) {
+                        database.ref(`orders/${orderId}/timestamp`).once('value', (snapshot) => {
+                            const timestamp = snapshot.val();
+                            if (timestamp) {
+                                timer.textContent = getElapsedTime(timestamp);
+                            }
+                        });
+                    }
+                }
+            });
+        }, 1000);
+    </script>
+</body>
+</html>

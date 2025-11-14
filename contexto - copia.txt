@@ -1,0 +1,117 @@
+Estoy invocando a Claude Code desde la carpeta raíz del proyecto con las dependencias de firebase instaladas, para que te resulte mas fácil desarrollar el sistema con el ecosistema de firebase 
+
+Objetivo: 
+
+Crear un restaurant virtual de almuerzos y jugos que operará en la zona fronteriza de Nogales, Sonora.
+
+https://ahuevoesverde.web.app
+
+El concepto esta pensado para las personas que están importando bienes, mercancías, maquinarias a través de la aduana de Nogales, Arizona - Nogales, Sonora.
+
+El restaurant, solo atenderá pedidos a domicilio (para llevar)
+
+El 90% de los comensales solicitaran que se entregue su pedido en la Aduana, mientras esperan la finalización del proceso del tramite de importación (aproximadamente 20 minutos de distancia de la cocina de preparación en Acacia Frondosa, Nogales, Sonora C.P. 84093)
+
+Deberás tomar como ejemplo la aplicación "Mariscos sol-del-mar" contenida en la carpeta "proyecto de ejemplo" la idea es que hagas una replica de este proyecto adaptado al contexto de "A huevo es verde" pero utilizando el estilo, funciones, herramientas y cualquier elemento que te resulte útil para nuestra aplicación, además de las mejoras y funciones especificas que se mencionaran abajo
+
+Asegúrate de incluir nativamente un sistema de toma y envíos de pedidos a domicilio avanzado y funcional, donde los usuarios puedan realizar pedidos desde la aplicación web y procesar pagos en linea a través de Stripe y Google Pay
+
+La aplicación debe de tener un sistema de notificaciones automático que notifique y envié las ordenes nuevas a la cocina. también debe de ser capaz de notificar, coordinar y trackear pedidos con repartidores y clientes 
+
+El sistema de pedidos se podrá operar desde la aplicación web, whatsapp o llamada
+
+El restaurante de almuerzos y jugos solo tendrá disponibles 5 platillos a elegir, a saber: 
+
+Platillo 1 
+
+Ahuevo homelet 
+
+3 huevos 🥚 queso 🧀 gouda y Jamón 
+Todos los platillos 
+Llevan Frijol, Puré y postre 🍮
+
+
+Platillo 2 
+
+Ahuevo Sonora 
+
+3 huevos montados sobre 3 tortillas blandas  gratinados y 
+Bañados con salsa de la casa 🏠 
+Todos los platillos llevan Frijol Negro refrito Puré y postre 🍮
+
+
+Platillo 3 
+
+Ahuevo Mexicano 
+
+3 huevos 🥚 Con tomate, Cebolla y chile 🌶 
+Acompañados con tiras de queso 🧀 fresco .
+
+Todos los platillos llevan Frijol negro Refrito, puré y postre.
+
+
+Platillo 4 
+
+Ahuevo Veracruz 
+
+3 huevos 🥚 con Tocino de alta calidad Acompañados con tiras de queso 🧀 fresco . 
+
+Todos los platillos llevan Frijol negro refrito, puré y postre 🍮
+
+
+Platillo 5 
+
+Ahuevo Chilango 
+
+3 huevos 🥚 con chorizo de  Toluca  acompañado con tiras de queso 🧀 Fresco . 
+
+Todos los platillos llevan Frijol negro refrito, puré y postre 🍮
+
+3 sabores de aguas naturales y jugo verde a base de espinaca, nopal, apio, piña o perejil✅
+
+Naranja 🍊 
+Melón 🍈 
+Piña 
+Café ☕ de olla con leche caliente
+
+Todos los platillos llevan tortillas hechas a mano
+
+La experiencia de usuario debe de ser esplendida, excepcional, simple, dinámica e interactiva.
+
+En la carpeta "images" podrás encontrar el Logo que deveras utilizar como imagen principal del logo en la app, favicon e imagen social de la aplicación.
+
+Utiliza el script de Python del "proyecto de ejemplo" como referencia para generar las imágenes de los platillos persuasivas y de alta resolución a través de modelos como por ejemplo nano banana o similar.
+
+Datos del proyecto de firebase: 
+
+Realtime Database: 
+
+https://ahuevoesverde-default-rtdb.firebaseio.com
+https://ahuevoesverde-default-rtdb.firebaseio.com/:null
+
+Reglas: 
+
+{
+  /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */
+  "rules": {
+    ".read": false,
+    ".write": false
+  }
+}
+
+
+Trigger Email from Firestore
+
+Make Payments with Google Pay
+
+Send Invoices using Stripe
+
+Run Payments with Stripe
+
+Send Messages with Twilio
+
+
+
+
+
+

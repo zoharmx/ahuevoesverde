@@ -1,0 +1,65 @@
+{
+  "name": "A Huevo Es Verde - Almuerzos y Jugos",
+  "short_name": "A Huevo Es Verde",
+  "description": "Almuerzos deliciosos con huevos y jugos naturales. Entrega rápida a la aduana de Nogales.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#66D9EF",
+  "theme_color": "#66D9EF",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/images/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/favicon.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/favicon.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/images/favicon.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "categories": ["food", "shopping", "lifestyle"],
+  "lang": "es-MX",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Ver Menú",
+      "short_name": "Menú",
+      "description": "Ver el menú completo",
+      "url": "/#menu",
+      "icons": [{ "src": "/images/favicon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Mis Pedidos",
+      "short_name": "Pedidos",
+      "description": "Ver historial de pedidos",
+      "url": "/#orders",
+      "icons": [{ "src": "/images/favicon.png", "sizes": "192x192" }]
+    }
+  ]
+}
