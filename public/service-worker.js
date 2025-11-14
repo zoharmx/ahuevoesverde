@@ -1,7 +1,7 @@
 // Service Worker for A Huevo Es Verde PWA
-// Version 1.0.2
+// Version 1.0.3 - Updated menu with new dishes
 
-const CACHE_VERSION = 'ahuevo-v3';
+const CACHE_VERSION = 'ahuevo-v4';
 const OFFLINE_URL = '/offline.html';
 
 // Assets to cache immediately on install

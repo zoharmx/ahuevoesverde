@@ -177,7 +177,7 @@
     "active": true,
     "tags": ["Comida", "Meal", "Pollo", "Chicken", "Crema", "Cream"],
     "ingredients": ["Pechuga de pollo", "Media crema", "Rajas", "Frijoles negros refritos", "Ensalada", "Salsa", "Tortillas de maíz"],
-    "stripeUrl": "https://buy.stripe.com/placeholder-pechuga"
+    "stripeUrl": "https://buy.stripe.com/6oUfZidqTbnq5xya6v7Vm0c"
   },
   {
     "name": "Tamales",
@@ -195,6 +195,6 @@
     "active": true,
     "tags": ["Antojito", "Snack", "Tamal", "Tamale", "Elote", "Corn", "Tradicional", "Traditional"],
     "ingredients": ["Masa de maíz", "Elote", "Azúcar", "Salsa"],
-    "stripeUrl": "https://buy.stripe.com/placeholder-tamales"
+    "stripeUrl": "https://buy.stripe.com/5kQbJ2aeH9fif88guT7Vm0d"
   }
 ]
