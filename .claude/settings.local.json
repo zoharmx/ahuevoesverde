@@ -30,7 +30,10 @@
       "Bash(node:*)",
       "Bash(curl:*)",
       "Bash(cmd /c copy \"images\\jugodepiña.png\" \"public\\images\\jugodepina.png\")",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(firebase functions:secrets:set:*)"
     ],
     "deny": [],
     "ask": []

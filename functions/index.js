@@ -1,6 +1,11 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
+// Load environment variables from .env file (for local development)
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
 admin.initializeApp();
 
 // Initialize Twilio client (lazy initialization - loaded only when needed)
